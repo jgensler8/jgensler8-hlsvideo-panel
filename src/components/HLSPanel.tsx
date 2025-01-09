@@ -70,7 +70,7 @@ export const HLSPanel: React.FC<Props> = ({ options, data, width, height, fieldC
 
   return (
     <>
-      <video ref={videoRef} className={cx(styles.video, css`${options.style}`)}>Your browser does not support HLS</video>
+      <video data-testid='hlsvideo' ref={videoRef} className={cx(styles.video, css`${options.style}`)}>Your browser does not support HLS</video>
     </>
   );
 };
