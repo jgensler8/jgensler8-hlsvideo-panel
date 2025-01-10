@@ -2,7 +2,7 @@
 
 stream m3u8 to your dashboard:
 
-![example](./img/example.png)
+![example](https://github.com/jgensler8/jgensler8-hlsvideo-panel/blob/main/img/example.png?raw=true)
 
 ## Overview / Introduction
 
