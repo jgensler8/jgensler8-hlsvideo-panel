@@ -16,4 +16,5 @@ export interface SimpleOptions {
   playsinline: boolean;
   poster: string;
   preload: PreloadOption;
+  [key: string]: string | boolean | undefined;
 }
