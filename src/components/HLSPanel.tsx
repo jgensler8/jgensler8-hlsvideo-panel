@@ -41,11 +41,20 @@ export const HLSPanel: React.FC<Props> = ({ options, data, width, height, fieldC
       } else {
         video.removeAttribute('crossorigin');
       }
-      video.setAttribute('disablepictureinpicture', options.disablepictureinpicture ? 'true' : 'false');
-      video.setAttribute('disableremoteplayback', options.disableremoteplayback ? 'true' : 'false');
-      video.setAttribute('loop', options.loop ? 'true' : 'false')
-      video.setAttribute('muted', options.muted ? 'true' : 'false')
-      video.setAttribute('playsinline', options.playsinline ? 'true' : 'false')
+      let boolean_attributes = [
+        'disablepictureinpicture',
+        'disableremoteplayback',
+        'loop',
+        'muted',
+        'playsinline'
+      ];
+      for(let attribute of boolean_attributes) {
+        if(options[attribute] === true) {
+          video.setAttribute(attribute, 'true');
+        } else {
+          video.removeAttribute(attribute);
+        }
+      }
       if(options.poster) {
         video.setAttribute('poster', options.poster);
       } else {
