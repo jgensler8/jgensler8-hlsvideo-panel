@@ -23,3 +23,24 @@ services:
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
       GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: jgensler8-hlsvideo-panel
+
+  nginx:
+    build: ./provisioning/nginx
+    ports:
+    - 8080:8080
+    volumes:
+    - ./provisioning/hls:/hls
+
+  ffmpeg:
+    image: linuxserver/ffmpeg:version-7.1-cli
+    user: root
+    volumes:
+      - ./provisioning/hls:/hls
+      - ./img:/img
+    command: >
+      -re -loop 1 -i /img/example.png
+      -filter_complex "setpts=(0.8)*PTS"
+      -c:v libx264 -preset ultrafast
+      -f hls -hls_time 10 -hls_list_size 10 -hls_flags delete_segments+program_date_time+round_durations+temp_file
+      /hls/stream.m3u8
+    # command: -loop 1 -framerate 25 -t 60 -i /img/example.png -c:v libx264 -preset ultrafast /hls/video_loop.mp4

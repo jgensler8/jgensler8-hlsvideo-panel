@@ -13,7 +13,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(HLSPanel).setPanelOptions((
     .addTextInput({
       path: 'style',
       name: 'style',
-      defaultValue: 'height: 100%; width:100%;'
+      defaultValue: 'height: 100%; width: 100%;'
     })
     .addBooleanSwitch({
       path: 'autoplay',
@@ -126,5 +126,11 @@ export const plugin = new PanelPlugin<SimpleOptions>(HLSPanel).setPanelOptions((
           }
         ]
       }
+    })
+    .addBooleanSwitch({
+      path: 'enablecrosshairtimerange',
+      name: 'Enable Crosshair Timerange',
+      description: 'enable a seekable time range that will publish and subscribe to hover events. only works with playlists that expose Date data (EXT-X-PROGRAM-DATE-TIME)',
+      defaultValue: false,
     })
 });

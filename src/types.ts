@@ -16,5 +16,6 @@ export interface SimpleOptions {
   playsinline: boolean;
   poster: string;
   preload: PreloadOption;
+  enablecrosshairtimerange: boolean;
   [key: string]: string | boolean | undefined;
 }

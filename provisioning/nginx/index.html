@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS Stream</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@v1.5.19"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@v1.6.0-beta.2"></script>
+    <!-- <script src="http://localhost:9999/dist/hls.js"></script> -->
+</head>
+
+<body>
+    <video id="video" controls autoplay loop="false" style="width: 100%;"></video>
+    <script>
+        const video = document.getElementById('video');
+        video.addEventListener('stalled', () => {
+            console.warn("!!! video stalled")
+        })
+        const STREAM = 'http://localhost:8080/hls/stream.m3u8';
+        window.video = video;
+        if (Hls.isSupported()) {
+            const hls = new Hls({
+                debug: true,
+                // startPosition: 8*60,
+                // frontBufferFlushThreshold: 2,
+                // maxBufferLength: 90,
+                // 120 seconds of 8 second frames at 2.2Mb is about 36 Mb
+                // maxBufferSize: 36 * 1024 * 1024,
+                // maxMaxBufferLength: 8 * 100,
+                // backBufferLength: 2,
+            });
+            hls.loadSource(STREAM);
+            // hls.stopLoad();
+            // hls.startLoad(8*60);
+            hls.attachMedia(video);
+            window.hls = hls;
+        } else if (video.canPlayType('application/vnd.apple.mpegURL')) {
+            video.src = STREAM;
+        } else {
+            console.error('Your browser does not support HLS.');
+        }
+        function startFrom(at) {
+            hls.startLoad(at);
+            hls.attachMedia(video);
+        }
+        function restart(at) {
+            hls.stopLoad();
+            hls.detachMedia();
+            hls.startLoad(at);
+            hls.attachMedia(video)
+        }
+        // function restartDate(d) {
+        //     if(d.typ)
+        // }
+    </script>
+</body>
+
+</html>
