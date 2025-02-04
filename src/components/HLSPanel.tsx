@@ -1,5 +1,5 @@
 import React, { SetStateAction, useContext } from 'react';
-import { PanelProps } from '@grafana/data';
+import { InterpolateFunction, PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import { css, cx } from '@emotion/css';
 import { useStyles2 } from '@grafana/ui';
@@ -9,9 +9,10 @@ import {
   useMediaRef,
   MediaProvider,
 } from 'media-chrome/dist/react/media-store';
+import { SeekButton } from './SeekButton';
 
 interface Props extends PanelProps<SimpleOptions> { }
-interface VideoProps { options: SimpleOptions };
+interface VideoProps { options: SimpleOptions, replaceVariables: InterpolateFunction };
 
 const getStyles = () => {
   return {
@@ -35,8 +36,14 @@ const HlsProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const Video: React.FC<VideoProps> = ({ options }) => {
+const Video: React.FC<VideoProps> = ({ options, replaceVariables }) => {
   const { setHls } = useContext(HlsContext);
+  const [interpolatedSrc, setInterpolatedSrc] = React.useState('');
+
+  React.useEffect(() => {
+    const src = replaceVariables(options.src);
+    setInterpolatedSrc(src);
+  }, [options.videoUrl, replaceVariables, options.src]);
 
   // const theme = useTheme2();
   const styles = useStyles2(getStyles);
@@ -104,19 +111,19 @@ const Video: React.FC<VideoProps> = ({ options }) => {
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
           // console.debug("level loaded " + hls.playingDate)
         })
-        hls.loadSource(options.src);
+        hls.loadSource(interpolatedSrc);
         hls.on(Hls.Events.MEDIA_ATTACHED, () => {
           // console.debug("media attached " + hls.playingDate)
         })
         hls.attachMedia(video);
         setHls(hls);
       } else if (video.canPlayType('application/vnd.apple.mpegURL')) {
-        video.src = options.src;
+        video.src = interpolatedSrc;
       } else {
         console.error('Your browser does not support HLS.');
       }
     }
-  }, [options, videoRef, setHls]);
+  }, [options, videoRef, setHls, interpolatedSrc]);
 
   return (
     <video data-testid='hlsvideo' slot="media" className={cx(styles.video, css`${options.style}`)} ref={(el) => {
@@ -129,20 +136,24 @@ const Video: React.FC<VideoProps> = ({ options }) => {
   );
 };
 
-export const HLSPanel: React.FC<Props> = ({ eventBus, options, data, width, height, fieldConfig, id, timeRange }) => {
-  let videoHeight = "100%";
-  if (options.enablecrosshairtimerange) {
-    videoHeight = "90%";
-  }
+export const HLSPanel: React.FC<Props> = ({ eventBus, options, replaceVariables, data, width, height, fieldConfig, id, timeRange }) => {
   return (
     <MediaProvider>
       <HlsProvider>
-        <div style={{ height: videoHeight }}>
-          <Video options={options}></Video>
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ width: '100%', flexGrow: 1, position: 'relative', overflow: 'hidden' }}>
+            <Video options={options} replaceVariables={replaceVariables}></Video>
+          </div>
+          {options.enablecrosshairtimerange ? <div style={{ height: '70px' }}>
+            <div style={{ height: '40px', overflow: 'hidden' }}>
+              <CrosshairTimeRange eventBus={eventBus} timeRange={timeRange}></CrosshairTimeRange>
+            </div>
+            <div style={{ height: '30px', overflow: 'hidden' }}>
+              <SeekButton seekDelta={options.seekDelta}>forward</SeekButton>
+              <SeekButton seekDelta={options.seekDelta * -1.0}>backward</SeekButton>
+            </div>
+          </div> : <></>}
         </div>
-        {options.enablecrosshairtimerange ? <div style={{ height: '10%' }}>
-          <CrosshairTimeRange eventBus={eventBus} timeRange={timeRange}></CrosshairTimeRange>
-        </div> : <></>}
       </HlsProvider>
     </MediaProvider>
   );

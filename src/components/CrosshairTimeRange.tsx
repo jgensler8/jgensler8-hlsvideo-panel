@@ -48,12 +48,12 @@ interface Props {
 
 export const CrosshairTimeRange: React.FC<Props> = ({ eventBus, timeRange }) => {
     const sliderRef = useRef<HTMLSpanElement | null>(null);
-    const [hoverTime, setHoverTime] = useState<number>(0)
+    const [hoverTime, setHoverTime] = useState<number>(0);
     const { hls } = useContext(HlsContext);
     const dispatch = useMediaDispatch();
 
     let marks: SliderMarks = {};
-    if(hls) {
+    if (hls) {
         const hoverMark = markValueFromPointTime(hls, hoverTime);
         marks[hoverMark] = <>hover</>;
         const dashFromMark = markValueFromPointTime(hls, timeRange.from.toDate().getTime());
@@ -125,7 +125,7 @@ export const CrosshairTimeRange: React.FC<Props> = ({ eventBus, timeRange }) => 
     };
 
     let max = 0;
-    if(hls?.media?.duration) {
+    if (hls?.media?.duration) {
         max = hls?.media?.duration;
     }
     return (<span

@@ -133,4 +133,10 @@ export const plugin = new PanelPlugin<SimpleOptions>(HLSPanel).setPanelOptions((
       description: 'enable a seekable time range that will publish and subscribe to hover events. only works with playlists that expose Date data (EXT-X-PROGRAM-DATE-TIME)',
       defaultValue: false,
     })
+    .addNumberInput({
+      path: 'seekDelta',
+      name: 'Seek Delta',
+      description: 'forward and backward seek duration',
+      defaultValue: 10,
+    })
 });

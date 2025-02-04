@@ -17,5 +17,6 @@ export interface SimpleOptions {
   poster: string;
   preload: PreloadOption;
   enablecrosshairtimerange: boolean;
-  [key: string]: string | boolean | undefined;
+  seekDelta: number;
+  [key: string]: string | boolean | number | undefined;
 }

@@ -137,10 +137,10 @@
         "muted": false,
         "playsinline": false,
         "preload": "notset",
-        "src": "http://localhost:8080/hls/stream.m3u8",
+        "src": "http://${var_host}:8080/hls/stream.m3u8",
         "style": "height: 100%; width:100%;"
       },
-      "pluginVersion": "11.3.2",
+      "pluginVersion": "1.0.6",
       "targets": [
         {
           "datasource": {
@@ -185,11 +185,11 @@
         "preload": "notset",
         "seriesCountSize": "sm",
         "showSeriesCount": false,
-        "src": "http://localhost:8080/hls/stream.m3u8",
+        "src": "http://${var_host}:8080/hls/stream.m3u8",
         "style": "height: 100%; width:100%;",
         "text": "Default value of text input option"
       },
-      "pluginVersion": "11.3.2",
+      "pluginVersion": "1.0.6",
       "targets": [
         {
           "alias": "",
@@ -210,7 +210,24 @@
   "schemaVersion": 40,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": "localhost",
+          "value": "localhost"
+        },
+        "name": "var_host",
+        "options": [
+          {
+            "selected": true,
+            "text": "localhost",
+            "value": "localhost"
+          }
+        ],
+        "query": "localhost",
+        "type": "custom"
+      }
+    ]
   },
   "time": {
     "from": "now-6h",
@@ -220,6 +237,6 @@
   "timezone": "",
   "title": "Provisioned hls-video dashboard",
   "uid": "a538aeff-5a8a-42a5-901c-938d896fdd6f",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }
